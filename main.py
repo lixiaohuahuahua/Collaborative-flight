@@ -22,6 +22,7 @@ crosshair_image = pygame.image.load("picture/crosshair.png").convert_alpha()
 target_rect = target_image.get_rect(center=(random.randint(50, width-50), random.randint(50, height-50)))
 target_visible = True
 
+
 # 设置准星初始位置
 crosshair_rect = crosshair_image.get_rect()
 
