@@ -7,10 +7,12 @@ import os
 pygame.init()
 pygame.display.set_caption("搜索躲避协同")
 # 设置屏幕尺寸和分割
+# 获取屏幕信息，以便以全屏模式启动
+infoObject = pygame.display.Info()
+width, height = infoObject.current_w, infoObject.current_h
 
-
-width, height = 1000, 800
-screen = pygame.display.set_mode((width, height))
+# 创建全屏窗口; 分屏问题
+screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 left_area = pygame.Rect(0, 0, width // 2, height)
 right_area = pygame.Rect(width // 2, 0, width // 2, height)
 
@@ -43,6 +45,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False  # 按下Esc键时退出游戏
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if right_area.collidepoint(event.pos):  # 点击在右边区域
                 if current_image and current_image[1].collidepoint(event.pos):

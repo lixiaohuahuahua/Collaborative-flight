@@ -5,6 +5,12 @@ import time
 
 # 初始化 Pygame
 pygame.init()
+# 获取屏幕信息，以便以全屏模式启动
+infoObject = pygame.display.Info()
+width, height = infoObject.current_w, infoObject.current_h
+# 创建全屏窗口
+screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+
 pygame.joystick.init()
 if pygame.joystick.get_count()<2:
     print("请插入两个操纵杆")
@@ -16,9 +22,7 @@ else:
 
 
 
-# 设置游戏窗口
-width, height = 1440, 900
-screen = pygame.display.set_mode((width, height))
+
 
 # 设置标题
 pygame.display.set_caption("瞄准射击协同")

@@ -5,10 +5,13 @@ import time
 
 # 初始化 Pygame
 pygame.init()
+# 获取屏幕信息，以便以全屏模式启动
+infoObject = pygame.display.Info()
+width, height = infoObject.current_w, infoObject.current_h
 
-# 设置游戏窗口
-width, height = 1440, 900
-screen = pygame.display.set_mode((width, height))
+# 创建全屏窗口
+screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+
 
 # 设置标题
 pygame.display.set_caption("瞄准射击协同")
@@ -62,6 +65,7 @@ while running:
     if target_visible:
         target_rect = target_rect.move(target_speed)
         # 边界检查，防止目标移出背景
+        # 图片左上角为基准点进行移动（会超出屏幕：减去图片尺寸即可）
         if target_rect.left < 0 or target_rect.right > width:
             target_speed[0] = -target_speed[0]
         if target_rect.top < 0 or target_rect.bottom > height:
