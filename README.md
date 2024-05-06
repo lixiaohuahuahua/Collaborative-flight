@@ -3,7 +3,7 @@
 ### <center>[buttoncheck.py](buttoncheck.py)
 
 ## 2、安装库
-###  <center>`pip install pygame`
+###      <center>`pip install pygame`
 
 ## 3、协同打击任务
 ### <center>[joystick_xietong.py](joystick_xietong.py)
