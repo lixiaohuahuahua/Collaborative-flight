@@ -1,12 +1,12 @@
 # 协同飞行任务
 ## 1、检查操纵杆编号和按钮编号
-### [buttoncheck.py](buttoncheck.py)
+### <center>[buttoncheck.py](buttoncheck.py)
 
 ## 2、安装库
-### `pip install pygame`
+###  <center>`pip install pygame`
 
 ## 3、协同打击任务
-### [joystick_xietong.py](joystick_xietong.py)
+### <center>[joystick_xietong.py](joystick_xietong.py)
 
 ![hit.PNG](picture%2Fhit.PNG)
 
@@ -18,15 +18,19 @@
 ### 统计数据：
             反应时：
 
-            打击
+            绩效
 
 
 
 ## 4、躲避&搜索任务
-### [search.py](search.py)
+### <center>[search.py](search.py)
 
 ### 操作方法：
             用户A使用↑↓/←→方向键 or 操纵杆 控制飞机躲避
 
             用户B使用鼠标进行视觉搜索任务
+### 统计数据：
+            反应时：
+
+            绩效
             
