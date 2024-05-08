@@ -3,28 +3,30 @@ import random
 import os
 import time
 
+
 # 初始化 Pygame
 pygame.init()
 # 获取屏幕信息，以便以全屏模式启动
 infoObject = pygame.display.Info()
 width, height = infoObject.current_w, infoObject.current_h
 
-# 创建全屏窗口
-screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+# width, height = 2560, 1440
+# width, height = 1960, 1080
 
+# 创建全屏窗口
+screen = pygame.display.set_mode((width, height))
 
 # 设置标题
 pygame.display.set_caption("瞄准射击协同")
 
-
 # 加载图片
 background_image = pygame.image.load("picture/background.jpg").convert()
+
 target_image = pygame.image.load("picture/target.png").convert_alpha()
 crosshair_image = pygame.image.load("picture/crosshair.png").convert_alpha()
 # 设置目标初始位置和是否可见
-target_rect = target_image.get_rect(center=(random.randint(50, width-50), random.randint(50, height-50)))
+target_rect = target_image.get_rect(center=(random.randint(50, width - 50), random.randint(50, height - 50)))
 target_visible = True
-
 
 # 设置准星初始位置
 crosshair_rect = crosshair_image.get_rect()
@@ -36,9 +38,12 @@ clock = pygame.time.Clock()
 running = True
 hit_time = 0  # 记录上次击中时间
 
+
 def reset_target():
     """重置目标的位置和速度"""
-    return target_image.get_rect(center=(random.randint(50, width-50), random.randint(50, height-50))), [random.choice([-2, 2]), random.choice([-2, 2])]
+    return target_image.get_rect(center=(random.randint(50, width - 50), random.randint(50, height - 50))), [
+        random.choice([-2, 2]), random.choice([-2, 2])]
+
 
 while running:
     for event in pygame.event.get():
@@ -78,7 +83,7 @@ while running:
     screen.blit(crosshair_image, crosshair_rect)
 
     pygame.display.flip()
-    #计时60s
+    # 计时60s
     clock.tick(60)
 
 pygame.quit()

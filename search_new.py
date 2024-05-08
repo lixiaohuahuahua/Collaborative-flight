@@ -8,10 +8,10 @@ pygame.init()
 pygame.display.set_caption("搜索躲避协同")
 # 设置屏幕尺寸和分割
 # 获取屏幕信息，以便以全屏模式启动
-# infoObject = pygame.display.Info()
-# width, height = infoObject.current_w, infoObject.current_h
+infoObject = pygame.display.Info()
+width, height = infoObject.current_w, infoObject.current_h
 
-width, height = 1960, 1080
+# width, height = 1960, 1080
 # 创建全屏窗口; 分屏问题
 screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 left_area = pygame.Rect(0, 0, width // 2, height)
@@ -44,11 +44,14 @@ health = 100
 
 
 # 右边区域的图片搜索
-search_images = [pygame.image.load("picture/hud.png").convert_alpha(), pygame.image.load("picture/fac.png").convert_alpha()]
-current_image = None
-search_spawn_time = 0
-search_interval = 5000  # milliseconds
+# 定义游戏常量
+grid_columns = 5
+grid_rows = 4
+cell_width = (width // 2) // grid_columns
+cell_height = (height - 250) // grid_rows
 score = 0
+time_limit = 120    # 游戏时长 秒
+game_over = False
 
 
 
