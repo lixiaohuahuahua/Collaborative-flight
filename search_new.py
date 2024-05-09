@@ -15,7 +15,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 grid_columns = 5
 grid_rows = 4
 cell_width = screen_width // grid_columns
-cell_height = (screen_height - 250) // grid_rows
+cell_height = (screen_height - 200) // grid_rows
 score = 0
 time_limit = 120  # 秒
 game_over = False
@@ -89,11 +89,11 @@ while running:
             for i, (img, rect, is_target) in enumerate(all_images):
                 if rect.collidepoint(pos):
                     if is_target:
-                        all_images.pop(i)
+                        all_images.pop(i)   # 从列表中删除目标图片
                         break
 
             # 检查是否已点击所有目标图片
-            if all(not target for img, rect, target in all_images):
+            if all(not is_target for img, rect, is_target in all_images):
                 score += 1
                 generate_grid()
 

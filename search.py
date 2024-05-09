@@ -12,11 +12,12 @@ pygame.display.set_caption("搜索躲避协同")
 # width, height = infoObject.current_w, infoObject.current_h
 
 width, height = 1960, 1080
+
 # 创建全屏窗口; 分屏问题
 screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 left_area = pygame.Rect(0, 0, width // 2, height)
 right_area = pygame.Rect(width // 2, 0, width // 2, height)
-#
+
 
 # # 操纵杆
 # pygame.joystick.init()
