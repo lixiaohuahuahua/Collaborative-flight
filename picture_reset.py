@@ -2,10 +2,10 @@ from PIL import Image
 import os
 
 # Example usage:
-source_folder = 'E:/desktop/pic'
-dest_folder = 'E:/desktop/reset'
-new_width = 250
-new_height = 250
+source_folder = 'picture/reset'
+dest_folder = 'picture/reset'
+new_width = 200
+new_height = 200
 prefix = 'search'
 
 

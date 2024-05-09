@@ -1,142 +1,133 @@
-import time
-
+# -*- coding: utf-8 -*-=
 import pygame
 import random
 import os
+import time
 
+# 初始化 Pygame
 pygame.init()
-pygame.display.set_caption("搜索躲避协同")
-# 设置屏幕尺寸和分割
-# 获取屏幕信息，以便以全屏模式启动
-infoObject = pygame.display.Info()
-width, height = infoObject.current_w, infoObject.current_h
 
-# width, height = 1960, 1080
-# 创建全屏窗口; 分屏问题
-screen = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
-left_area = pygame.Rect(0, 0, width // 2, height)
-right_area = pygame.Rect(width // 2, 0, width // 2, height)
-#
+# 设置屏幕尺寸
+screen_width, screen_height = 1200, 1000
+screen = pygame.display.set_mode((screen_width, screen_height))
 
-# # 操纵杆
-# pygame.joystick.init()
-# if pygame.joystick.get_count() < 1:
-#     print("请插入操纵杆")
-# else:
-#     joystick = pygame.joystick.Joystick(0) #准星操作杆、设备号1
-#     joystick.init()
-
-# 游戏基本设置
-clock = pygame.time.Clock()
-running = True
-fps = 60
-
-# 飞机和障碍物设置
-plane_image = pygame.image.load("picture/target.png").convert_alpha()
-plane_rect = plane_image.get_rect(center=(width // 4, height // 2))
-obstacle_image = pygame.image.load("picture/logo32.png").convert_alpha()
-obstacles = []
-obstacle_spawn_time = 0
-obstacle_interval = 3000  # milliseconds
-
-# 血条设置
-health = 100
-
-
-# 右边区域的图片搜索
 # 定义游戏常量
 grid_columns = 5
 grid_rows = 4
-cell_width = (width // 2) // grid_columns
-cell_height = (height - 250) // grid_rows
+cell_width = screen_width // grid_columns
+cell_height = (screen_height - 250) // grid_rows
 score = 0
-time_limit = 120    # 游戏时长 秒
+time_limit = 120  # 秒
 game_over = False
 
+# 加载所有图片
+image_folder = "picture/reset"  # 替换为你自己的文件夹路径
+image_files = [f for f in os.listdir(image_folder) if f.endswith('.png')]
+
+# 确保有足够多的图片
+if len(image_files) < grid_columns * grid_rows:
+    print("图片数量不足以填满游戏区域")
+    exit()
 
 
+# 函数用于加载图片
+def load_image(filename):
+    img = pygame.image.load(os.path.join(image_folder, filename)).convert_alpha()
+    return pygame.transform.scale(img, (200, 200))
 
+
+# 设置字体和颜色（pygame 不支持中文，可以将字体导入到Font文件夹）
+font = pygame.font.Font("Font/simhei.ttf", 36)
+small_font = pygame.font.Font("Font/simhei.ttf", 28)
+text_color = (255, 255, 255)
+
+# 随机选择目标图片
+target_image_file = random.choice(image_files)
+target_image = load_image(target_image_file)
+
+# 图片和位置的映射列表
+image_positions = []
+all_images = []
+
+
+# 函数用于生成图像网格
+def generate_grid():
+    global all_images, image_positions
+    all_images = []
+    image_positions = []
+
+    # 随机选择目标图片
+    target_files = random.sample(image_files, grid_columns * grid_rows - 2)
+    target_files.append(target_image_file)
+    target_files.append(target_image_file)
+    random.shuffle(target_files)
+
+    # 在下方网格内排列
+    for row in range(grid_rows):
+        for col in range(grid_columns):
+            x = col * cell_width
+            y = 200 + row * cell_height
+            img = load_image(target_files.pop())
+            all_images.append((img, pygame.Rect(x, y, 200, 200), img == target_image))
+
+
+generate_grid()
+
+# 游戏开始时间
+start_time = time.time()
+
+# 主循环
+running = True
 while running:
-    # 事件处理
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False  # 按下Esc键时退出游戏
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if right_area.collidepoint(event.pos):  # 点击在右边区域
-                if current_image and current_image[1].collidepoint(event.pos):
-                    score += 1
-                    current_image = None
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+            pos = event.pos
+            for i, (img, rect, is_target) in enumerate(all_images):
+                if rect.collidepoint(pos):
+                    if is_target:
+                        all_images.pop(i)
+                        break
 
-    # 更新飞机位置
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
-        plane_rect.x -= 5
-    if keys[pygame.K_RIGHT]:
-        plane_rect.x += 5
-    if keys[pygame.K_UP]:
-        plane_rect.y -= 5
-    if keys[pygame.K_DOWN]:
-        plane_rect.y += 5
+            # 检查是否已点击所有目标图片
+            if all(not target for img, rect, target in all_images):
+                score += 1
+                generate_grid()
 
-    # # 获取1设备坐标位置
-    # x_axis = joystick.get_axis(0)
-    # y_axis = joystick.get_axis(1)
-    # plane_rect.x += int(x_axis * 5)  # 调整速度
-    # plane_rect.y += int(y_axis * 5)
+    # 检查时间是否结束
+    remaining_time = time_limit - int(time.time() - start_time)
+    if remaining_time <= 0:
+        game_over = True
+        remaining_time = 0
 
-    plane_rect.clamp_ip(left_area)  # 限制飞机在左边区域内
-
-    # 处理障碍物生成和移动
-    current_time = pygame.time.get_ticks()
-    if current_time - obstacle_spawn_time > obstacle_interval:
-        obstacle_rect = obstacle_image.get_rect(midtop=(random.randint(0, width // 2), 0))
-        obstacles.append(obstacle_rect)
-        obstacle_spawn_time = current_time
-
-    for obstacle in obstacles[:]:
-        obstacle.y += 3
-        if obstacle.top > height:
-            obstacles.remove(obstacle)
-        if obstacle.colliderect(plane_rect):
-            health -= 10
-            obstacles.remove(obstacle)
-
-    # 处理右边区域的图片搜索
-    if not current_image or (current_time - search_spawn_time > search_interval):
-        selected_image = random.choice(search_images)
-        rect = selected_image.get_rect(center=(random.randint(width // 2 + 50, width - 50), random.randint(50, height - 50)))
-        current_image = (selected_image, rect)
-        search_spawn_time = current_time
-
-    # 清空屏幕
+    # 绘制背景
     screen.fill((0, 0, 0))
 
-    # 绘制左边游戏
-    pygame.draw.rect(screen, (255, 255, 255), left_area, 1)
-    screen.blit(plane_image, plane_rect)
-    for obstacle in obstacles:
-        screen.blit(obstacle_image, obstacle)
+    # 绘制分隔线
+    pygame.draw.line(screen, (255, 255, 255), (0, 250), (screen_width, 250), 3)
 
-    # 绘制血条
-    pygame.draw.rect(screen, (255, 0, 0), (10, 10, health * 2, 20))
+    # 绘制上方信息
+    score_text = font.render(f"得分: {score}", True, text_color)
+    screen.blit(score_text, (50, 50))
+    target_text = font.render("目标图片：", True, text_color)
+    screen.blit(target_text, (200, 150))
+    screen.blit(target_image, (500, 50))
+    time_text = font.render(f"时间: {remaining_time} 秒", True, text_color)
+    screen.blit(time_text, (screen_width - 300, 50))
 
-    # 绘制右边游戏
-    pygame.draw.rect(screen, (255, 255, 255), right_area, 1)
-    if current_image:
-        screen.blit(current_image[0], current_image[1])
-    font = pygame.font.Font(None, 36)
-    score_text = font.render(f"Score: {score}", True, (255, 255, 255))
-    screen.blit(score_text, (width // 2 + 10, 10))
+
+    # 绘制下方图片网格
+    for img, rect, is_target in all_images:
+        screen.blit(img, rect)
 
     # 更新屏幕
     pygame.display.flip()
-    clock.tick(fps)
 
-    # 检查游戏是否结束
-    if health <= 0:
-        running = False
+    # 控制帧率
+    pygame.time.Clock().tick(60)
 
+# 退出 Pygame
 pygame.quit()
