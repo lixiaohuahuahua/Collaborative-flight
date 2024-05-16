@@ -1,9 +1,15 @@
-# 协同飞行任务
-## 1、检查操纵杆编号和按钮编号
-### <center>[buttoncheck.py](buttoncheck.py)
+# 协同飞行任务 
+    python3.9
 
-## 2、安装库
-### <center>`pip install pygame`
+
+## 1、安装方式
+    下载：Code——Download ZIP    或   GIT:https://github.com/lixiaohuahuahua/Collaborative-flight.git
+
+### <center>    安装配置库：`pip install -r requirements.txt`
+
+## 2、检查操纵杆编号和按钮编号
+### <center>[buttoncheck.py](buttoncheck.py)
+    检查两个操纵杆的编号和每个操纵杆对应的按钮的编号（button number）
 
 ## 3、协同打击任务
 ### <center>[joystick_xietong.py](joystick_xietong.py)

@@ -118,7 +118,6 @@ while running:
     time_text = font.render(f"时间: {remaining_time} 秒", True, text_color)
     screen.blit(time_text, (screen_width - 300, 50))
 
-
     # 绘制下方图片网格
     for img, rect, is_target in all_images:
         screen.blit(img, rect)
